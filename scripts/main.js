@@ -82,6 +82,6 @@ playerTwo.setPieceType('O');
 //DOM Manipulation Event Listeners
 display.newGame.addEventListener('click', () => {
 	display.newGame.classList.add('hidden');
-	gameBoard.initNewBoard();
+	//gameBoard.initNewBoard();
 	display.gameBoard.classList.remove('hidden');
 });
