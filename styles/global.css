@@ -23,5 +23,43 @@ body {
 h1 {
 	text-align: center;
 	margin: 1em auto;
-	font-size: min(3rem, calc(1rem + 3dvw));
+	font-size: min(3rem, calc(1.5rem + 4dvw));
+}
+
+h2 {
+	text-align: center;
+	font-size: min(2rem, calc(1rem + 2dvw));
+	margin: 1em auto;
+}
+
+.new-game {
+	background-color: var(--maximum-yellow-red);
+	color: var(--ebony);
+	display: grid;
+	margin: 0 auto;
+	width: min(300px, 70dvw);
+	border-radius: 0.25rem;
+	cursor: pointer;
+}
+
+.new-game.hidden {
+	display: none;
+}
+
+.new-game > h2 {
+	text-shadow: 0 0 3px var(--ebony);
+}
+
+.game-board {
+	display: grid;
+	width: min(600px, 90dvw);
+	height: min(600px, 90dvw);
+	margin: 0 auto;
+	background-color: var(--cultured);
+	border-radius: 0.25rem;
+	padding: 3dvw;
+}
+
+.game-board.hidden {
+	display: none;
 }
