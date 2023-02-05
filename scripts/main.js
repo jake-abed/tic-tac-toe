@@ -48,9 +48,19 @@ const gameBoard = (() => {
 
 	const placePiece = (piece, location) => grid[location] = piece.toUpperCase();
 
+	const initNewBoard = () => {
+		for (let i = 0; i <= 8; i++) {
+			const space = document.createElement('div');
+			space.classList.add('space')
+			space.setAttribute('id', `space-${i}`);
+			display.gameBoard.appendChild(space);
+		}
+	};
+
 	return {
 		grid,
-		placePiece
+		placePiece,
+		initNewBoard
 	}
 })();
 
@@ -82,6 +92,6 @@ playerTwo.setPieceType('O');
 //DOM Manipulation Event Listeners
 display.newGame.addEventListener('click', () => {
 	display.newGame.classList.add('hidden');
-	//gameBoard.initNewBoard();
+	gameBoard.initNewBoard();
 	display.gameBoard.classList.remove('hidden');
 });
