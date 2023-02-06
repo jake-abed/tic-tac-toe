@@ -48,6 +48,7 @@ const gameState = (() => {
 
 	const getActivePlayerPieceType = () => activePlayer.getPieceType();
 	const getActivePlayer = () => activePlayer;
+	const isGameActive = () => gameActive;
 	const setActivePlayer = (player) => activePlayer = player;
 	const swapActivePlayer = () => {
 		if (getActivePlayer() == playerOne) {
@@ -62,6 +63,7 @@ const gameState = (() => {
 		gameOver,
 		getActivePlayerPieceType,
 		getActivePlayer,
+		isGameActive,
 		setActivePlayer,
 		swapActivePlayer
 	};
@@ -85,20 +87,18 @@ For developer sanity, the array indexes map to the following:
 const gameBoard = (() => {
 	const grid = ['', '', '', '', '', '', '', '', ''];
 
-	const placePiece = (piece, location) => grid[location] = piece.toUpperCase();
+	const WIN_CONS = [
+		[0, 1, 2],
+		[3, 4, 5],
+		[6, 7, 8],
+		[0, 3, 6],
+		[1, 4, 7],
+		[2, 5, 8],
+		[0, 4, 8],
+		[2, 4, 6]
+	]
 
-	const initNewBoard = () => {
-		for (let i = 0; i <= 8; i++) {
-			const space = document.createElement('div');
-			space.classList.add('space')
-			space.setAttribute('id', `space-${i}`);
-			space.setAttribute('data-space', i);
-			space.addEventListener('click', () => {
-				grid[i] = currentPlayer
-			});
-			display.gameBoard.appendChild(space);
-		}
-	};
+	const placePiece = (piece, location) => grid[location] = piece.toUpperCase();
 
 	const refreshBoard = () => {
 		for (let i = 0; i <=8; i++) {
@@ -111,6 +111,40 @@ const gameBoard = (() => {
 			};
 		}
 	}
+	
+	const checkWinCons = (pieceType) => {
+		//Go through current grid.
+		if (WIN_CONS.some((winCon) => {
+			let winProgress = 0;
+			winCon.forEach((position) => {
+				if (grid[position] == pieceType) winProgress++;
+				if (winProgress >= 3) return true;
+			})
+			if (winProgress == 3) return true;
+		})) {
+			gameState.gameOver();
+		}
+	}
+
+	const initNewBoard = () => {
+		for (let i = 0; i <= 8; i++) {
+			const space = document.createElement('div');
+			const activePlayerSelectSpace = () => {
+				if (!gameState.isGameActive()) return console.error('Game over! Please restart!'),
+					space.removeEventListener('click', activePlayerSelectSpace);
+				grid[i] = gameState.getActivePlayerPieceType();
+				checkWinCons(gameState.getActivePlayerPieceType());
+				gameState.swapActivePlayer();
+				space.removeEventListener('click', activePlayerSelectSpace);
+				refreshBoard();
+			};
+			space.classList.add('space')
+			space.setAttribute('id', `space-${i}`);
+			space.setAttribute('data-space', i);
+			space.addEventListener('click', activePlayerSelectSpace);
+			display.gameBoard.appendChild(space);
+		}
+	};
 
 	return {
 		placePiece,
@@ -125,6 +159,7 @@ const gameBoard = (() => {
 display.newGame.addEventListener('click', () => {
 	display.newGame.classList.add('hidden');
 	gameBoard.initNewBoard();
+	gameState.startGame();
 	gameState.setActivePlayer(playerOne);
 	display.gameBoard.classList.remove('hidden');
 });

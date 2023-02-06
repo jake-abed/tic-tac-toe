@@ -77,5 +77,5 @@ h2 {
 
 .space > p {
 	color: var(--ebony);
-	font-size: calc(2rem + 6dvw);
+	font-size: calc(2.25rem + 5dvw);
 }
