@@ -74,3 +74,8 @@ h2 {
 	cursor: pointer;
 	box-shadow: 0 0 0.5rem #00000069, inset 0 0 0.5rem #00000069;
 }
+
+.space > p {
+	color: var(--ebony);
+	font-size: calc(2rem + 6dvw);
+}

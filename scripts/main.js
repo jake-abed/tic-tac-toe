@@ -4,11 +4,35 @@ const display = {
 	gameBoard: document.querySelector('.game-board')
 }
 
+//Create player objects - factories
+
+const Player = (name) => {
+	let pieceType = '';
+	const getName = () => name;
+	const getPieceType = () => pieceType;
+
+	const setPieceType = (piece) => pieceType = piece.toUpperCase();
+	const setName = (newName) => name = newName;
+
+	return {
+		getName,
+		getPieceType,
+		setName,
+		setPieceType
+	}
+}
+
+const playerOne = Player('Player 1');
+const playerTwo = Player('Player 2');
+playerOne.setPieceType('X');
+playerTwo.setPieceType('O');
+
 //Create game state object
 const gameState = (() => {
 	let preGame = true,
 		gameActive = false,
-		postGame = false;
+		postGame = false,
+		activePlayer;
 
 	const startGame = () => {
 		preGame = false;
@@ -22,9 +46,24 @@ const gameState = (() => {
 		postGame = true;
 	}
 
+	const getActivePlayerPieceType = () => activePlayer.getPieceType();
+	const getActivePlayer = () => activePlayer;
+	const setActivePlayer = (player) => activePlayer = player;
+	const swapActivePlayer = () => {
+		if (getActivePlayer() == playerOne) {
+			setActivePlayer(playerTwo);
+		} else if (getActivePlayer() == playerTwo) {
+			setActivePlayer(playerOne);
+		}
+	}
+
 	return {
 		startGame,
-		gameOver
+		gameOver,
+		getActivePlayerPieceType,
+		getActivePlayer,
+		setActivePlayer,
+		swapActivePlayer
 	};
 })();
 
@@ -53,39 +92,32 @@ const gameBoard = (() => {
 			const space = document.createElement('div');
 			space.classList.add('space')
 			space.setAttribute('id', `space-${i}`);
+			space.setAttribute('data-space', i);
+			space.addEventListener('click', () => {
+				grid[i] = currentPlayer
+			});
 			display.gameBoard.appendChild(space);
 		}
 	};
 
+	const refreshBoard = () => {
+		for (let i = 0; i <=8; i++) {
+			const currentSpace = document.querySelector(`#space-${i}`);
+			const piece = document.createElement('p');
+			piece.classList.add(`piece-${grid[i]}`);
+			piece.innerText = grid[i];
+			if (!currentSpace.firstChild && grid[i] != '') {
+				currentSpace.appendChild(piece);
+			};
+		}
+	}
+
 	return {
-		grid,
 		placePiece,
-		initNewBoard
+		initNewBoard,
+		refreshBoard
 	}
 })();
-
-//Create player objects - factories
-
-const Player = (name) => {
-	let pieceType = '';
-	const getName = () => name;
-	const getPieceType = () => pieceType;
-
-	const setPieceType = (piece) => pieceType = piece.toUpperCase();
-	const setName = (newName) => name = newName;
-
-	return {
-		getName,
-		getPieceType,
-		setName,
-		setPieceType
-	}
-}
-
-const playerOne = Player('Player 1');
-const playerTwo = Player('Player 2');
-playerOne.setPieceType('X');
-playerTwo.setPieceType('O');
 
 //Create functions to render gameboard.
 
@@ -93,5 +125,6 @@ playerTwo.setPieceType('O');
 display.newGame.addEventListener('click', () => {
 	display.newGame.classList.add('hidden');
 	gameBoard.initNewBoard();
+	gameState.setActivePlayer(playerOne);
 	display.gameBoard.classList.remove('hidden');
 });
