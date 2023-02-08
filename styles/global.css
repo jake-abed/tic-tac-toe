@@ -90,6 +90,19 @@ label > input {
 	display: none;
 }
 
+.game-over-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100dvw;
+	height: 100dvh;
+	background-color: #00000033;
+	backdrop-filter: blur(0.5rem) brightness(25%);
+}
+
 .game-over-wrapper.hidden {
 	display: none;
 }
@@ -105,5 +118,5 @@ label > input {
 
 .space > p {
 	color: var( --ebony);
-	font-size: calc(2rem + 6dvw);
+	font-size: clamp(2rem, calc(3rem + 5dvw), 6rem);
 }

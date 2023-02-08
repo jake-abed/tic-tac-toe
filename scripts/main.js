@@ -1,11 +1,21 @@
 'use strict';
-const display = {
-	newGame: document.querySelector('.new-game'),
-	newGameWrapper: document.querySelector('.new-game-wrapper'),
-	gameBoard: document.querySelector('.game-board'),
-	playerOneName: document.querySelector('#player-one-name'),
-	playerTwoName: document.querySelector('#player-two-name')
-}
+const display = (() => {
+	const newGame = document.querySelector('.new-game'),
+	newGameWrapper = document.querySelector('.new-game-wrapper'),
+	gameBoard = document.querySelector('.game-board'),
+	playerOneName = document.querySelector('#player-one-name'),
+	playerTwoName = document.querySelector('#player-two-name'),
+	gameOverWrapper = document.querySelector('.game-over-wrapper');
+	
+	return {
+		newGame,
+		newGameWrapper,
+		gameBoard,
+		playerOneName,
+		playerTwoName,
+		gameOverWrapper
+	}
+})();
 
 //Create game state object
 const gameState = (() => {
@@ -125,11 +135,18 @@ const gameBoard = (() => {
 			display.gameBoard.appendChild(space);
 		}
 	};
+	
+	const resetGrid = ()  => {
+		for (let i = 0; i < grid.length; i++) {
+			grid[i] = '';
+		};
+	};
 
 	return {
 		placePiece,
 		initNewBoard,
-		refreshBoard
+		refreshBoard,
+		resetGrid
 	}
 })();
 
@@ -168,4 +185,16 @@ display.newGame.addEventListener('click', () => {
 	gameState.startGame();
 	gameState.setActivePlayer(playerOne);
 	display.gameBoard.classList.remove('hidden');
+});
+
+console.log(display.gameOverWrapper);
+
+display.gameOverWrapper.addEventListener('click', () => {
+	display.gameOverWrapper.classList.add('hidden');
+	while (display.gameBoard.firstChild) {
+		display.gameBoard.removeChild(display.gameBoard.lastChild);
+	};
+	gameBoard.resetGrid();
+	display.gameBoard.classList.add('hidden');
+	display.newGameWrapper.classList.remove('hidden');
 });
