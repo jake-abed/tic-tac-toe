@@ -1,31 +1,11 @@
 'use strict';
 const display = {
 	newGame: document.querySelector('.new-game'),
-	gameBoard: document.querySelector('.game-board')
+	newGameWrapper: document.querySelector('.new-game-wrapper'),
+	gameBoard: document.querySelector('.game-board'),
+	playerOneName: document.querySelector('#player-one-name'),
+	playerTwoName: document.querySelector('#player-two-name')
 }
-
-//Create player objects - factories
-
-const Player = (name) => {
-	let pieceType = '';
-	const getName = () => name;
-	const getPieceType = () => pieceType;
-
-	const setPieceType = (piece) => pieceType = piece.toUpperCase();
-	const setName = (newName) => name = newName;
-
-	return {
-		getName,
-		getPieceType,
-		setName,
-		setPieceType
-	}
-}
-
-const playerOne = Player('Player 1');
-const playerTwo = Player('Player 2');
-playerOne.setPieceType('X');
-playerTwo.setPieceType('O');
 
 //Create game state object
 const gameState = (() => {
@@ -113,7 +93,6 @@ const gameBoard = (() => {
 	}
 	
 	const checkWinCons = (pieceType) => {
-		//Go through current grid.
 		if (WIN_CONS.some((winCon) => {
 			let winProgress = 0;
 			winCon.forEach((position) => {
@@ -122,8 +101,9 @@ const gameBoard = (() => {
 			})
 			if (winProgress == 3) return true;
 		})) {
-			gameState.gameOver();
+			gameState.gameOver('win', gameState.getActivePlayer());
 		}
+		if (!grid.includes('')) gameState.gameOver('tie');
 	}
 
 	const initNewBoard = () => {
@@ -155,9 +135,35 @@ const gameBoard = (() => {
 
 //Create functions to render gameboard.
 
+//Create player objects - factories
+
+const Player = (name) => {
+	let pieceType = '';
+	const getName = () => name;
+	const getPieceType = () => pieceType;
+
+	const setPieceType = (piece) => pieceType = piece.toUpperCase();
+	const setName = (newName) => name = newName;
+
+	return {
+		getName,
+		getPieceType,
+		setName,
+		setPieceType
+	}
+}
+
+const playerOne = Player('Player One');
+const playerTwo = Player('Player Two');
+playerOne.setPieceType('X');
+playerTwo.setPieceType('O');
+
 //DOM Manipulation Event Listeners
 display.newGame.addEventListener('click', () => {
-	display.newGame.classList.add('hidden');
+	display.newGameWrapper.classList.add('hidden');
+	console.log(display.playerOneName.value);
+	playerOne.setName(display.playerOneName.value ?? 'Player 1');
+	playerTwo.setName(display.playerTwoName.value ?? 'Player 2');
 	gameBoard.initNewBoard();
 	gameState.startGame();
 	gameState.setActivePlayer(playerOne);
