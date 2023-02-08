@@ -67,6 +67,7 @@ h2 {
 label > input {
 	height: calc(1rem + 2dvh);
 	padding-left: 0.5rem;
+	color: var(--ebony);
 }
 
 .new-game > h2 {
