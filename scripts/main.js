@@ -5,7 +5,8 @@ const display = (() => {
 	gameBoard = document.querySelector('.game-board'),
 	playerOneName = document.querySelector('#player-one-name'),
 	playerTwoName = document.querySelector('#player-two-name'),
-	gameOverWrapper = document.querySelector('.game-over-wrapper');
+	gameOverWrapper = document.querySelector('.game-over-wrapper'),
+	reportWinner = document.querySelector('.report-winner');
 	
 	return {
 		newGame,
@@ -13,7 +14,8 @@ const display = (() => {
 		gameBoard,
 		playerOneName,
 		playerTwoName,
-		gameOverWrapper
+		gameOverWrapper,
+		reportWinner
 	}
 })();
 
@@ -111,10 +113,16 @@ const gameBoard = (() => {
 			})
 			if (winProgress == 3) return true;
 		})) {
-			gameState.gameOver('win', gameState.getActivePlayer());
+			gameState.gameOver();
+			display.reportWinner.innerText = `${gameState.getActivePlayer().getName()} wins!`;
+			display.gameOverWrapper.classList.remove('hidden');
 		}
-		if (!grid.includes('')) gameState.gameOver('tie');
-	}
+		if (!grid.includes('')) {
+			gameState.gameOver('tie');
+			display.reportWinner.innerText = `Dang! It's a tie.`;
+			display.gameOverWrapper.classList.remove('hidden');
+		};
+	};
 
 	const initNewBoard = () => {
 		for (let i = 0; i <= 8; i++) {
